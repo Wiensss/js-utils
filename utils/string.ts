@@ -43,6 +43,37 @@ function randomString(
   return _.sampleSize(charset, len).join('')
 }
 
+/**
+ * 、在源字符串中匹配目标字符串
+ * @param origin 用来被匹配的源字符串
+ * @param target 进行匹配的目标字符串
+ * @param returnType 返回格式，默认为 'boolean'
+ * - 'boolean': 返回匹配结果 true / false
+ * - 'index': 返回匹配的起始位置, 匹配失败为 -1
+ * - 'object': 返回 { boolean, index }
+ * @returns 根据 returnType 返回匹配结果
+ */
+function matchString(
+  origin: string,
+  target: string,
+  returnType: 'boolean' | 'index' | 'object' = 'boolean'
+): any {
+  const execResult = (result: { index: number, boolean: boolean }) => (
+    returnType !== 'object' ? result[returnType] : result
+  )
+
+  if (target === '') execResult({ index: 0, boolean: true })
+
+  const orginString = origin.trim().toLocaleLowerCase()
+  const targetString = target.trim().toLocaleLowerCase()
+
+  return execResult({
+    index: orginString.search(targetString),
+    boolean: orginString.includes(targetString)
+  })
+}
+
 module.exports = {
-  randomString
+  randomString,
+  matchString
 }
